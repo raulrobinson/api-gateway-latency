@@ -1,0 +1,79 @@
+# -------------------------
+# APP
+# -------------------------
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# -------------------------
+# METRICS
+# -------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      status:
+        http-mapping:
+          down: 500
+      show-details: always
+  httpexchanges:
+    recording:
+      include: request-headers,time-taken,session-id
+
+# -------------------------
+# SPRING CLOUD
+# -------------------------
+spring:
+  application:
+    name: bff-svc
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+
+        # ------------------------------------------------
+        # ROUTE FOR GENERATE A CAPTCHA CODE.
+        # ------------------------------------------------
+        - id: captcha-generate
+          uri: ${captcha-svc}
+          predicates:
+            - Path=/telefonica/v1/captcha-svc/generateCaptcha
+
+        # ------------------------------------------------
+        # ROUTE FOR VALIDATE A CAPTCHA CODE.
+        # ------------------------------------------------
+        - id: captcha-validate
+          uri: ${captcha-svc}
+          predicates:
+            - Path=/telefonica/v1/captcha-svc/validateCaptcha
+
+        # ------------------------------------------------
+        # ROUTE FOR VALIDATE A USERNAME & PASSWORD.
+        # ------------------------------------------------
+        - id: ldap
+          uri: ${ldap-svc}
+          predicates:
+            - Path=/telefonica/v1/ldap-svc/validateUser
+
+        # ------------------------------------------------
+        # ROUTE TEST SERVICE MOCK DATA.
+        # ------------------------------------------------
+        - id: jsonplaceholder-test
+          uri: https://jsonplaceholder.typicode.com
+          predicates:
+            - Path=/**
+
+# ------------------
+# CUSTOM HEADER
+# ------------------
+allowed:
+  origin: http://localhost:3000

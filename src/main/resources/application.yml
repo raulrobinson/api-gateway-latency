@@ -1,0 +1,13 @@
+# ----------------------------------------------
+# APP General Configuration
+# ----------------------------------------------
+spring:
+  application:
+    name: @project.name@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+info:
+  project-version: @project.version@
+  build-timestamp: ${maven.build.timestamp}
