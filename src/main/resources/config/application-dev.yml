@@ -44,31 +44,15 @@ spring:
         # ROUTE FOR GENERATE A CAPTCHA CODE.
         # ------------------------------------------------
         - id: captcha-generate
-          uri: ${captcha-svc}
+          uri: http://captcha.transversales.svc.cluster.local:8080
           predicates:
-            - Path=/telefonica/v1/captcha-svc/generateCaptcha
-
-        # ------------------------------------------------
-        # ROUTE FOR VALIDATE A CAPTCHA CODE.
-        # ------------------------------------------------
-        - id: captcha-validate
-          uri: ${captcha-svc}
-          predicates:
-            - Path=/telefonica/v1/captcha-svc/validateCaptcha
-
-        # ------------------------------------------------
-        # ROUTE FOR VALIDATE A USERNAME & PASSWORD.
-        # ------------------------------------------------
-        - id: ldap
-          uri: ${ldap-svc}
-          predicates:
-            - Path=/telefonica/v1/ldap-svc/validateUser
+            - Path=/telefonica/resource/v1/captcha/generate
 
         # ------------------------------------------------
         # ROUTE TEST SERVICE MOCK DATA.
         # ------------------------------------------------
         - id: jsonplaceholder-test
-          uri: ${jsonplaceholder-svc}
+          uri: https://jsonplaceholder.typicode.com
           predicates:
             - Path=/**
 
